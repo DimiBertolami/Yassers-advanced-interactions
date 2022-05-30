@@ -52,7 +52,18 @@ body {
 
 .poke {
     font-weight: bold;
+    position: relative;
 }
+
+/* .poke:hover::after {
+    width: 200%;
+    background-image: none;
+    height: 400%;
+    left: 0;
+    transform: translateY(-100%);
+    position: absolute;
+} */
+
 
 .chaser {
     width: 50px;

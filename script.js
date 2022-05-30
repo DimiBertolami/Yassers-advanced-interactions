@@ -110,15 +110,31 @@ const collage = {
         })
     },
 }
-
 /*****************************************************************************************************
  * EXERCISE THREE - POKEMON IMAGE TOOLTIPS
  *****************************************************************************************************/
+const pokeNames = Array.from(document.querySelectorAll('.poke'));
+pokeNames.forEach((name) => {
+    name.addEventListener('mouseover', () => {
+        const sprite = new Image();
+        sprite.src = `./assets/pokemon/${name.innerText}.png`;
+        sprite.style.position = 'absolute';
+        sprite.style.left = '0';
+        sprite.style.transform = 'translateY(-100%)'
+        sprite.style.height = '400%'
+        if (name.contains(sprite)) return
+        if (name.hasChildNodes()) {
+            name.innerHTML = name.innerText;
+        }
+        name.appendChild(sprite)
+    })
+})
+pokeNames.forEach((name) => {
+    name.addEventListener('mouseleave', () => {
+        name.innerHTML = name.innerText;
 
-
-
-
-
+    })
+})
 /*****************************************************************************************************
  * EXERCISE FOUR - CHASER GAME
  *****************************************************************************************************/
@@ -194,7 +210,6 @@ function updateMousePosition(event) {
     mouse.position.x = event.pageX;
     mouse.position.y = event.pageY;
 }
-
 function init() {
     //DARK MODE ON START <3
     changeTheme();
