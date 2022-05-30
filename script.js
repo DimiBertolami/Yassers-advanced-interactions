@@ -72,6 +72,33 @@ collageImageHolders.forEach(element => {
     }
     })
 });
+//----SECTION 3-----
+const pokemonNames = Array.from(document.querySelectorAll('.poke'));
+let imageShown = false;
+pokemonNames.forEach(pokemonName=>{
+    pokemonName.addEventListener('mouseover',()=>{
+        if(!imageShown){
+        pokemonName.style.position = 'relative';
+        const pokemonImage = new Image();
+        pokemonImage.src = `./assets/pokemon/${pokemonName.innerText}.png`;
+        pokemonImage.style.position = 'absolute';
+        pokemonImage.style.width = '5rem';
+        pokemonName.appendChild(pokemonImage)
+        pokemonImage.style.left = '0'
+        pokemonImage.style.top = `-${(pokemonImage.getBoundingClientRect().height)+pokemonName.getBoundingClientRect().height}px`;
+        imageShown = true;
+    }
+    })
+})
+pokemonNames.forEach(pokemonName=>{
+    pokemonName.addEventListener('mouseleave',()=>{
+        console.log('Helloooo')
+        pokemonName.innerHTML = pokemonName.innerText;
+        pokemonName.style.position = '';
+        imageShown = false;
+    })
+})
+
 
 //-----SECTION 5-----
 //RANDOM LETTERS
