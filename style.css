@@ -1,68 +1,104 @@
-body{
+body {
     padding-bottom: 50px;
 }
 
-.picture{
+.picture {
     padding: 10px;
 }
 
-.image{
+.image {
     height: 250px;
     background: midnightblue;
 }
 
-.poke{
+.poke {
     font-weight: bold;
 }
 
-.chaser{
+.chaser {
     width: 50px;
     height: 50px;
     background: red;
     border-radius: 50%;
 }
 
-.runner{
+.runner {
     width: 50px;
     height: 50px;
     background: green;
     border-radius: 50%;
 }
 
-.box{
+.box {
     border: 1px solid grey;
     height: 350px;
 }
 
-.carouselContainer{
+.carouselContainer {
     background: royalblue;
     height: 400px;
+    background-image: url(./assets/carousel/image1.webp);
+    background-size: cover;
+    background-position: bottom center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    /* position: relative; */
 }
 
-.title{
+/* .carouselContainer::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    opacity: 0;
+}
+
+.carouselContainer:hover::after {
+    opacity: 1;
+    animation: opacity 2s 1s infinite;
+}
+
+@keyframes opacity {
+    0% {
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+} */
+
+.title {
     font-size: 1.5em;
     margin-top: 100px;
     margin-bottom: 20px;
 }
 
-.lightMode{
+.lightMode {
     background: rgb(245, 245, 245);
     color: rgb(10, 10, 10);
 }
 
-.darkMode{
+.darkMode {
     background: rgb(10, 10, 10);
     color: rgb(245, 245, 245);
 }
 
-.bigTitle{
+.bigTitle {
     font-size: 2.5em;
     margin-top: 100px;
     margin-bottom: 50px;
     text-align: center;
 }
 
-.mode{
+.mode {
     position: fixed;
     bottom: 20px;
     right: 20px;
@@ -74,6 +110,6 @@ body{
     border-radius: 50%;
 }
 
-.mode:hover{
+.mode:hover {
     cursor: pointer;
 }
