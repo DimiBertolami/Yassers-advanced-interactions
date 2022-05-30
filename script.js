@@ -1,9 +1,5 @@
-const mouse = {
-    position: {
-        x: 0,
-        y: 0,
-    }
-}
+
+
 /*****************************************************************************************************
  * EXERCISE ONE - PARRALAX CAROUSEL
  *****************************************************************************************************/
@@ -45,15 +41,75 @@ const carousel = {
         this.lastTimeSinceImageUpdate = delta;
     }
 }
+function runCarousel(delta) {
+    if ((mouse.position.y > carousel.position.top
+        && mouse.position.y < carousel.position.bottom)
+        &&
+        (mouse.position.x > carousel.position.left &&
+            mouse.position.x < carousel.position.right)) {
+        carousel.nextImage(delta)
+    } else {
+        return
+    }
+}
 /*****************************************************************************************************
  * EXERCISE TWO - COLLAGE
  *****************************************************************************************************/
 const collage = {
-
+    imageContainers: Array.from(document.querySelectorAll('.image')),
+    randomImageURL: `https://picsum.photos/500/500?random=`,
+    imageIsBig: false,
+    setRandomImages() {
+        let i = 0;
+        this.imageContainers.forEach((container) => {
+            this.randomImageURL += i;
+            container.style.backgroundImage = `url(${this.randomImageURL})`
+            i++;
+        })
+    },
+    getImageURL(containerIndex) {
+        return this.imageContainers[containerIndex].style.backgroundImage;
+    },
+    setEventListeners() {
+        this.imageContainers.forEach((container) => {
+            container.addEventListener('click', () => {
+                this.enlargeImage(container);
+            })
+        })
+    },
+    enlargeImage(container) {
+        if (this.imageIsBig) return;
+        container.classList.add('active')
+        this.addDescriptionFromAttribute(container)
+        this.addDescriptionWithJS(container)
+        this.imageIsBig = true;
+        this.imageBackToGrid(container)
+    },
+    addDescriptionFromAttribute(container) {
+        const descElem = document.createElement('p');
+        descElem.classList.add('image-description');
+        descElem.innerText = container.getAttribute('description')
+        container.appendChild(descElem)
+    },
+    addDescriptionWithJS(container) {
+        const descElem = document.createElement('p');
+        descElem.classList.add('image-description');
+        descElem.innerText = `Hi I am a description made with JS! I found this image for you at: ${container.style.backgroundImage.slice(5, -2)}`;
+        container.appendChild(descElem)
+    },
+    beautifyURL(url) {
+        let beatifiedURL = url.slice(5, -2);
+        return beatifiedURL
+    },
+    imageBackToGrid(container) {
+        container.addEventListener('click', () => {
+            container.classList.remove('active')
+            container.innerHTML = '';
+            this.imageIsBig = false;
+            this.setEventListeners()
+        })
+    },
 }
-
-
-
 
 /*****************************************************************************************************
  * EXERCISE THREE - POKEMON IMAGE TOOLTIPS
@@ -91,8 +147,6 @@ const collage = {
  * DARK MODE
  *****************************************************************************************************/
 const themeToggler = document.getElementById('theme-toggler');
-//DARK MODE ON START <3
-changeTheme();
 themeToggler.addEventListener('click', changeTheme);
 function changeTheme() {
     try {
@@ -123,8 +177,15 @@ function randomLetter() {
     return alphabet[Math.floor(Math.random() * alphabet.length)]
 }
 /*****************************************************************************************************
- * GLOBAL MAIN FUNCTION
+ * CORE 
  *****************************************************************************************************/
+init()
+const mouse = {
+    position: {
+        x: 0,
+        y: 0,
+    }
+}
 document.addEventListener('mousemove', (e) => {
     updateMousePosition(e);
     runMain();
@@ -133,22 +194,19 @@ function updateMousePosition(event) {
     mouse.position.x = event.pageX;
     mouse.position.y = event.pageY;
 }
-function runMain() {
-    requestAnimationFrame(main)
+
+function init() {
+    //DARK MODE ON START <3
+    changeTheme();
+    //STARTING LAUNCHERS FOR SITE
+    collage.setEventListeners()
+    collage.setRandomImages();
 }
 function main(delta) {
     if (!document.hasFocus()) return
     requestAnimationFrame(main)
     runCarousel(delta)
 }
-function runCarousel(delta) {
-    if ((mouse.position.y > carousel.position.top
-        && mouse.position.y < carousel.position.bottom)
-        &&
-        (mouse.position.x > carousel.position.left &&
-            mouse.position.x < carousel.position.right)) {
-        carousel.nextImage(delta)
-    } else {
-        return
-    }
+function runMain() {
+    requestAnimationFrame(main)
 }

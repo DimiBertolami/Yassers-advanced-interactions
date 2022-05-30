@@ -9,6 +9,45 @@ body {
 .image {
     height: 250px;
     background: midnightblue;
+    cursor: pointer;
+    border-radius: .5rem;
+    border: solid .1rem;
+    border-image:
+        linear-gradient(bottom to top,
+            rgba(250, 250, 250, 0.1),
+            rgba(250, 240, 250, 0.2),
+            rgba(250, 250, 250, 0.3),
+            rgba(250, 250, 250, 0.4),
+            rgba(250, 250, 250, 0.5),
+            rgba(250, 250, 250, 0.6),
+            rgba(250, 250, 250, 0.7),
+            rgba(250, 250, 250, 0.8),
+            rgba(250, 250, 250, 0.9),
+            rgba(250, 250, 250, 1));
+}
+
+.collage {
+    position: relative;
+}
+
+.active {
+    background-size: cover;
+    background-repeat: no-repeat;
+    position: absolute;
+    height: 50%;
+    width: 50%;
+    left: 50%;
+    bottom: 50%;
+    transform: translate3d(-50%, 50%, 0);
+}
+
+.image-description {
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 1rem;
+    margin-top: 2rem;
+    margin: 1rem;
+    margin-top: 25%;
 }
 
 .poke {
