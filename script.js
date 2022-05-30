@@ -73,6 +73,7 @@ collageImageHolders.forEach(element => {
     })
 });
 //----SECTION 3-----
+//Pokemon
 const pokemonNames = Array.from(document.querySelectorAll('.poke'));
 let imageShown = false;
 pokemonNames.forEach(pokemonName=>{
@@ -83,8 +84,8 @@ pokemonNames.forEach(pokemonName=>{
         pokemonImage.src = `./assets/pokemon/${pokemonName.innerText}.png`;
         pokemonImage.style.position = 'absolute';
         pokemonImage.style.width = '5rem';
-        pokemonName.appendChild(pokemonImage)
         pokemonImage.style.left = '0'
+        pokemonName.appendChild(pokemonImage)
         pokemonImage.style.top = `-${(pokemonImage.getBoundingClientRect().height)+pokemonName.getBoundingClientRect().height}px`;
         imageShown = true;
     }
@@ -92,15 +93,60 @@ pokemonNames.forEach(pokemonName=>{
 })
 pokemonNames.forEach(pokemonName=>{
     pokemonName.addEventListener('mouseleave',()=>{
-        console.log('Helloooo')
         pokemonName.innerHTML = pokemonName.innerText;
         pokemonName.style.position = '';
         imageShown = false;
     })
 })
+// onmousemove = function(e){console.log("mouse location:", e.clientX, e.clientY)}
+//--SECTION 4
+//REDBALLMOUSEGAME
+let mouseInRedBallSquare = false;
+let mousePosition = {
+    x:'60px',
+    y:'50px'
+}
+const chaserGameContainer = document.getElementById('chaserContainer');
+const chaserGameContainerOffset = chaserGameContainer.getBoundingClientRect();
+chaserGameContainer.style.position = 'relative';
+const chaser = document.getElementById('chaser');
+chaserGameContainer.addEventListener('mouseover',()=>{
+    mouseInRedBallSquare = true;
+    window.requestAnimationFrame(redBallGame)
+})
+chaserGameContainer.addEventListener('mouseleave',()=>{
+    mouseInRedBallSquare = false;
+})
+function redBallGame(delta){
+    console.log(delta)
+
+    onmousemove = (e)=>{
+        console.log('HI')
+        if(e.clientX>chaserGameContainerOffset.right){
+            mousePosition.x = chaserGameContainerOffset.right + 'px';
+        }else{
+        mousePosition.x = e.clientX + 'px';
+    }
+    if(e.clientY>chaserGameContainerOffset.bottom+window.scrollY){
+        mousePosition.y = chaserGameContainerOffset.bottom + 'px';
+    }else{
+        mousePosition.y = e.clientY + 'px';
+    }
+        console.log(mousePosition)
+    }
+    console.log(mousePosition)
+    chaser.style.position  = 'absolute';
+    chaser.style.left = mousePosition.y;
+    chaser.style.bottom = mousePosition.x;
+    if(!mouseInRedBallSquare) return;
+    window.requestAnimationFrame(redBallGame);
+}
 
 
-//-----SECTION 5-----
+
+
+
+//-----SECTION 6-----
 //RANDOM LETTERS
 Array.from(document.querySelectorAll(".letter")).forEach(el => {
     el.innerText = randomLetter();
