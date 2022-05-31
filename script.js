@@ -71,8 +71,8 @@ function checkForMouseInCarousel() {
  *****************************************************************************************************/
 const collage = {
     imageContainers: Array.from(document.querySelectorAll('.image')),
-    randomImageURL: `https://picsum.photos/500/500?random=`,
-    // randomImageURL: `none`,
+    // randomImageURL: `https://picsum.photos/500/500?random=`,
+    randomImageURL: `none`,
     imageIsBig: false,
     init() {
         this.setRandomImages();
@@ -174,6 +174,7 @@ const chaserGame = {
     },
     chaser: {
         DOM: document.getElementById('chaser'),
+
         position: {
             x: 0,
             y: 0,
@@ -186,6 +187,13 @@ const chaserGame = {
         size: {
             height: document.getElementById('chaser').getBoundingClientRect().height,
             width: document.getElementById('chaser').getBoundingClientRect().width,
+        },
+        collisions: {
+            top: false,
+            left: false,
+            right: false,
+            bottom: false,
+            mouse: false,
         },
         update(delta) {
             this.setDirection();
@@ -204,29 +212,152 @@ const chaserGame = {
             this.direction.x = mouse.position.x;
             this.direction.y = mouse.position.y;
             if ((this.direction.x - this.size.width / 2) < chaserGame.gameContainer.position.left) {
-                this.DOM.style.width = '30px';
+                this.collisions.left = true;
                 this.position.x = chaserGame.gameContainer.position.left + this.size.width / 2;
             } else if ((this.direction.x + this.size.width / 2) > chaserGame.gameContainer.position.right) {
-                this.DOM.style.width = '30px';
-                this.position.x = chaserGame.gameContainer.position.right;
+                this.collisions.right = true;
+                if (!this.collisions.top && !this.collisions.bottom) {
+                    this.position.x = chaserGame.gameContainer.position.right
+                } else if (this.collisions.top || this.collisions.bottom) {
+                    this.position.x = chaserGame.gameContainer.position.right - this.size.width / 2
+                }
             }
             else {
-                this.DOM.style.width = '50px';
-
+                this.collisions.left = false;
+                this.collisions.right = false;
                 this.position.x = this.direction.x;
             } if ((this.direction.y - this.size.height / 2) < chaserGame.gameContainer.position.top) {
-                this.DOM.style.height = '30px';
+                this.collisions.top = true;
                 this.position.y = chaserGame.gameContainer.position.top + this.size.height / 2;
             } else if ((this.direction.y + this.size.height / 2) > chaserGame.gameContainer.position.bottom) {
-                this.DOM.style.height = '30px';
-                this.position.y = chaserGame.gameContainer.position.bottom;
+                this.collisions.bottom = true;
+                if (!this.collisions.left && !this.collisions.right) {
+                    this.position.y = chaserGame.gameContainer.position.bottom;
+                } else if (this.collisions.left || this.collisions.right) {
+                    this.position.y = chaserGame.gameContainer.position.bottom - this.size.height / 2;
+                }
             }
             else {
-                this.DOM.style.height = '50px';
+                this.collisions.top = false;
+                this.collisions.bottom = false;
                 this.position.y = this.direction.y;
 
             }
+            this.updateStyling()
 
+        },
+        updateStyling() {
+            if (
+                this.collisions.top &&
+                !this.collisions.left &&
+                !this.collisions.right &&
+                !this.collisions.bottom
+            ) {
+                this.DOM.style.height = '25px';
+                this.DOM.style.width = '75px';
+                this.DOM.style.borderTopRightRadius = '50%';
+                this.DOM.style.borderTopLeftRadius = '50%';
+                this.DOM.style.borderBottomRightRadius = '100%';
+                this.DOM.style.borderBottomLeftRadius = '100%';
+                this.DOM.style.backgroundColor = 'orange';
+            } else if (
+                this.collisions.top &&
+                this.collisions.left &&
+                !this.collisions.right &&
+                !this.collisions.bottom
+            ) {
+                this.DOM.style.height = '50px';
+                this.DOM.style.width = '50px';
+                this.DOM.style.borderTopRightRadius = '50%';
+                this.DOM.style.borderTopLeftRadius = '0%';
+                this.DOM.style.borderBottomRightRadius = '50%';
+                this.DOM.style.borderBottomLeftRadius = '50%';
+                this.DOM.style.backgroundColor = 'orange';
+            } else if (
+                this.collisions.top &&
+                !this.collisions.left &&
+                this.collisions.right &&
+                !this.collisions.bottom
+            ) {
+                this.DOM.style.height = '50px';
+                this.DOM.style.width = '50px';
+                this.DOM.style.borderTopRightRadius = '0%';
+                this.DOM.style.borderTopLeftRadius = '50%';
+                this.DOM.style.borderBottomRightRadius = '50%';
+                this.DOM.style.borderBottomLeftRadius = '50%';
+                this.DOM.style.backgroundColor = 'orange';
+            } else if (
+                !this.collisions.top &&
+                this.collisions.left &&
+                !this.collisions.right &&
+                !this.collisions.bottom
+            ) {
+                this.DOM.style.height = '75px';
+                this.DOM.style.width = '25px';
+                this.DOM.style.borderTopRightRadius = '100%';
+                this.DOM.style.borderTopLeftRadius = '50%';
+                this.DOM.style.borderBottomRightRadius = '100%';
+                this.DOM.style.borderBottomLeftRadius = '50%';
+                this.DOM.style.backgroundColor = 'orange';
+            } else if (
+                !this.collisions.top &&
+                this.collisions.left &&
+                !this.collisions.right &&
+                this.collisions.bottom
+            ) {
+                this.DOM.style.height = '50px';
+                this.DOM.style.width = '50px';
+                this.DOM.style.borderTopRightRadius = '50%';
+                this.DOM.style.borderTopLeftRadius = '50%';
+                this.DOM.style.borderBottomRightRadius = '50%';
+                this.DOM.style.borderBottomLeftRadius = '0%';
+                this.DOM.style.backgroundColor = 'orange';
+            } else if (
+                !this.collisions.top &&
+                !this.collisions.left &&
+                !this.collisions.right &&
+                this.collisions.bottom
+            ) {
+                this.DOM.style.height = '25px';
+                this.DOM.style.width = '75px';
+                this.DOM.style.borderTopRightRadius = '100%';
+                this.DOM.style.borderTopLeftRadius = '100%';
+                this.DOM.style.borderBottomRightRadius = '50%';
+                this.DOM.style.borderBottomLeftRadius = '50%';
+                this.DOM.style.backgroundColor = 'orange';
+            } else if (
+                !this.collisions.top &&
+                !this.collisions.left &&
+                this.collisions.right &&
+                this.collisions.bottom
+            ) {
+                this.DOM.style.height = '50px';
+                this.DOM.style.width = '50px';
+                this.DOM.style.borderTopRightRadius = '50%';
+                this.DOM.style.borderTopLeftRadius = '50%';
+                this.DOM.style.borderBottomRightRadius = '0%';
+                this.DOM.style.borderBottomLeftRadius = '50%';
+                this.DOM.style.backgroundColor = 'orange';
+            } else if (
+                !this.collisions.top &&
+                !this.collisions.left &&
+                this.collisions.right &&
+                !this.collisions.bottom
+            ) {
+                this.DOM.style.height = '75px';
+                this.DOM.style.width = '25px';
+                this.DOM.style.borderTopRightRadius = '50%';
+                this.DOM.style.borderTopLeftRadius = '100%';
+                this.DOM.style.borderBottomRightRadius = '50%';
+                this.DOM.style.borderBottomLeftRadius = '100%';
+                this.DOM.style.backgroundColor = 'orange';
+            }
+            else {
+                this.DOM.style.backgroundColor = 'red';
+                this.DOM.style.height = '50px';
+                this.DOM.style.width = '50px';
+                this.DOM.style.borderRadius = '50%';
+            }
         }
     },
     init() {
@@ -240,10 +371,10 @@ const chaserGame = {
     },
 }
 function checkForMouseInChaserGame() {
-    if (mouse.position.x > chaserGame.gameContainer.position.left &&
-        mouse.position.x < chaserGame.gameContainer.position.right &&
-        mouse.position.y > chaserGame.gameContainer.position.top &&
-        mouse.position.y < chaserGame.gameContainer.position.bottom) {
+    if (mouse.position.x >= chaserGame.gameContainer.position.left &&
+        mouse.position.x <= chaserGame.gameContainer.position.right &&
+        mouse.position.y >= chaserGame.gameContainer.position.top &&
+        mouse.position.y <= chaserGame.gameContainer.position.bottom) {
         chaserGame.mouseover = true;
         console.log(`MOUSE IN CHASERGAME`);
         requestAnimationFrame(chaserGameMain)
@@ -261,6 +392,7 @@ function chaserGameMain(delta) {
 /*****************************************************************************************************
  * EXERCISE FIVE - RUNNER GAME
  *****************************************************************************************************/
+
 /*****************************************************************************************************
  * EXERCISE SIX - BE CREATIVE - USE KEY/MOUSE INPUTS
  *****************************************************************************************************/
