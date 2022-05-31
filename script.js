@@ -182,7 +182,6 @@ const chaserGame = {
         direction: {
             x: 0,
             y: 0,
-            velocity: 0.5,
         },
         size: {
             height: document.getElementById('chaser').getBoundingClientRect().height,
@@ -195,14 +194,15 @@ const chaserGame = {
             bottom: false,
             mouse: false,
         },
+        movement: {
+            velocity: 1,
+            lastTimeChaserMoved: 0,
+        },
         update(delta) {
             this.setDirection();
         },
         draw() {
             this.drawPosition();
-        },
-        setDirectionToMousePosition() {
-
         },
         drawPosition() {
             this.DOM.style.left = `${(this.position.x - (this.size.width / 2)) - chaserGame.gameContainer.position.left}px`;
@@ -361,10 +361,14 @@ const chaserGame = {
         }
     },
     init() {
+        this.chaser.direction.x = 50;
+        this.chaser.direction.y = 50;
     },
     update(delta) {
         this.chaser.update(delta);
         this.draw();
+        this.chaser.lastTimeChaserMoved = delta;
+
     },
     draw() {
         this.chaser.draw();
@@ -385,9 +389,15 @@ function checkForMouseInChaserGame() {
     }
 }
 function chaserGameMain(delta) {
-    if (!chaserGame.mouseover) return;
+
+    // if (!chaserGame.mouseover) {
+    //     chaserGame.init();
+    //     chaserGame.chaser.drawPosition();
+    // } else {
+
     chaserGame.update(delta);
     requestAnimationFrame(chaserGameMain)
+    // };
 }
 /*****************************************************************************************************
  * EXERCISE FIVE - RUNNER GAME
