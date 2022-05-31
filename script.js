@@ -1,20 +1,22 @@
-
-
+//SCROLL TO TOP ON LOAD
+window.onbeforeunload = function () {
+    window.scrollTo(0, 0);
+}
 /*****************************************************************************************************
  * EXERCISE ONE - PARRALAX CAROUSEL
  *****************************************************************************************************/
 const carousel = {
     container: document.getElementById('carouselContainer'),
+    mouseover: false,
     position: {
         top: document.getElementById('carouselContainer').getBoundingClientRect().top,
         right: document.getElementById('carouselContainer').getBoundingClientRect().right,
         left: document.getElementById('carouselContainer').getBoundingClientRect().left,
         bottom: document.getElementById('carouselContainer').getBoundingClientRect().bottom,
-    }
-    ,
+    },
     backgroundImageIndex: 0,
     updateInterval: 1,
-    lastTimeSinceImageUpdate: 0,
+    lastTimeUpdateRan: 0,
     images: [
         image1 = {
             url: './assets/carousel/image1.webp'
@@ -28,37 +30,54 @@ const carousel = {
         image4 = {
             url: './assets/carousel/image4.jpg'
         }],
-    nextImage(delta) {
-        const secondsSinceLastRan = (delta - this.lastTimeSinceImageUpdate) / 1000;
+    update(delta) {
+        const secondsSinceLastRan = (delta - this.lastTimeUpdateRan) / 1000;
         if (secondsSinceLastRan < 1 * this.updateInterval) return;
         if (this.backgroundImageIndex < this.images.length - 1) {
             this.backgroundImageIndex++
-            this.container.style.backgroundImage = `url(${this.images[this.backgroundImageIndex].url})`
         } else {
             this.backgroundImageIndex = 0;
-            this.container.style.backgroundImage = `url(${this.images[this.backgroundImageIndex].url})`
         }
-        this.lastTimeSinceImageUpdate = delta;
-    }
+        this.lastTimeUpdateRan = delta;
+        this.draw();
+    },
+    draw() {
+        this.container.style.backgroundImage = `url(${this.images[this.backgroundImageIndex].url})`
+
+
+    },
 }
-function runCarousel(delta) {
-    if ((mouse.position.y > carousel.position.top
-        && mouse.position.y < carousel.position.bottom)
-        &&
+function carouselMain(delta) {
+    if (!carousel.mouseover) return;
+    carousel.update(delta);
+    requestAnimationFrame(carouselMain)
+}
+function checkForMouseInCarousel() {
+    if ((mouse.position.y > carousel.position.top &&
+        mouse.position.y < carousel.position.bottom) &&
         (mouse.position.x > carousel.position.left &&
             mouse.position.x < carousel.position.right)) {
-        carousel.nextImage(delta)
+        console.log('MOUSE IN CAROUSEL')
+        carousel.mouseover = true;
+        requestAnimationFrame(carouselMain);
     } else {
+        carousel.mouseover = false;
         return
     }
 }
+
 /*****************************************************************************************************
  * EXERCISE TWO - COLLAGE
  *****************************************************************************************************/
 const collage = {
     imageContainers: Array.from(document.querySelectorAll('.image')),
     randomImageURL: `https://picsum.photos/500/500?random=`,
+    // randomImageURL: `none`,
     imageIsBig: false,
+    init() {
+        this.setRandomImages();
+        this.setEventListeners()
+    },
     setRandomImages() {
         let i = 0;
         this.imageContainers.forEach((container) => {
@@ -138,27 +157,113 @@ pokeNames.forEach((name) => {
 /*****************************************************************************************************
  * EXERCISE FOUR - CHASER GAME
  *****************************************************************************************************/
+const chaserGame = {
+    mouseover: false,
+    gameContainer: {
+        DOM: document.getElementById('chaserGameContainer'),
+        position: {
+            top: document.getElementById('chaserGameContainer').getBoundingClientRect().top,
+            left: document.getElementById('chaserGameContainer').getBoundingClientRect().left,
+            bottom: document.getElementById('chaserGameContainer').getBoundingClientRect().bottom,
+            right: document.getElementById('chaserGameContainer').getBoundingClientRect().right,
+        },
+        size: {
+            width: document.getElementById('chaserGameContainer').getBoundingClientRect().width,
+            height: document.getElementById('chaserGameContainer').getBoundingClientRect().height,
+        },
+    },
+    chaser: {
+        DOM: document.getElementById('chaser'),
+        position: {
+            x: 0,
+            y: 0,
+        },
+        direction: {
+            x: 0,
+            y: 0,
+            velocity: 0.5,
+        },
+        size: {
+            height: document.getElementById('chaser').getBoundingClientRect().height,
+            width: document.getElementById('chaser').getBoundingClientRect().width,
+        },
+        update(delta) {
+            this.setDirection();
+        },
+        draw() {
+            this.drawPosition();
+        },
+        setDirectionToMousePosition() {
 
+        },
+        drawPosition() {
+            this.DOM.style.left = `${(this.position.x - (this.size.width / 2)) - chaserGame.gameContainer.position.left}px`;
+            this.DOM.style.top = `${(this.position.y - (this.size.height / 2)) - chaserGame.gameContainer.position.top}px`
+        },
+        setDirection() {
+            this.direction.x = mouse.position.x;
+            this.direction.y = mouse.position.y;
+            if ((this.direction.x - this.size.width / 2) < chaserGame.gameContainer.position.left) {
+                this.DOM.style.width = '30px';
+                this.position.x = chaserGame.gameContainer.position.left + this.size.width / 2;
+            } else if ((this.direction.x + this.size.width / 2) > chaserGame.gameContainer.position.right) {
+                this.DOM.style.width = '30px';
+                this.position.x = chaserGame.gameContainer.position.right;
+            }
+            else {
+                this.DOM.style.width = '50px';
 
+                this.position.x = this.direction.x;
+            } if ((this.direction.y - this.size.height / 2) < chaserGame.gameContainer.position.top) {
+                this.DOM.style.height = '30px';
+                this.position.y = chaserGame.gameContainer.position.top + this.size.height / 2;
+            } else if ((this.direction.y + this.size.height / 2) > chaserGame.gameContainer.position.bottom) {
+                this.DOM.style.height = '30px';
+                this.position.y = chaserGame.gameContainer.position.bottom;
+            }
+            else {
+                this.DOM.style.height = '50px';
+                this.position.y = this.direction.y;
 
+            }
 
+        }
+    },
+    init() {
+    },
+    update(delta) {
+        this.chaser.update(delta);
+        this.draw();
+    },
+    draw() {
+        this.chaser.draw();
+    },
+}
+function checkForMouseInChaserGame() {
+    if (mouse.position.x > chaserGame.gameContainer.position.left &&
+        mouse.position.x < chaserGame.gameContainer.position.right &&
+        mouse.position.y > chaserGame.gameContainer.position.top &&
+        mouse.position.y < chaserGame.gameContainer.position.bottom) {
+        chaserGame.mouseover = true;
+        console.log(`MOUSE IN CHASERGAME`);
+        requestAnimationFrame(chaserGameMain)
 
+    } else {
+        chaserGame.mouseover = false;
+        return
+    }
+}
+function chaserGameMain(delta) {
+    if (!chaserGame.mouseover) return;
+    chaserGame.update(delta);
+    requestAnimationFrame(chaserGameMain)
+}
 /*****************************************************************************************************
  * EXERCISE FIVE - RUNNER GAME
  *****************************************************************************************************/
-
-
-
-
-
 /*****************************************************************************************************
  * EXERCISE SIX - BE CREATIVE - USE KEY/MOUSE INPUTS
  *****************************************************************************************************/
-
-
-
-
-
 /*****************************************************************************************************
  * DARK MODE
  *****************************************************************************************************/
@@ -204,23 +309,24 @@ const mouse = {
 }
 document.addEventListener('mousemove', (e) => {
     updateMousePosition(e);
-    runMain();
 });
 function updateMousePosition(event) {
     mouse.position.x = event.pageX;
     mouse.position.y = event.pageY;
+    checkForMouseInCarousel();
+    checkForMouseInChaserGame();
 }
 function init() {
     //DARK MODE ON START <3
     changeTheme();
     //STARTING LAUNCHERS FOR SITE
-    collage.setEventListeners()
-    collage.setRandomImages();
+    collage.init()
 }
+
 function main(delta) {
     if (!document.hasFocus()) return
     requestAnimationFrame(main)
-    runCarousel(delta)
+
 }
 function runMain() {
     requestAnimationFrame(main)
