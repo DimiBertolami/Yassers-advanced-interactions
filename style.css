@@ -75,9 +75,9 @@ body {
     height: 50px;
     background: red;
     border-radius: 50%;
-    transition: all 100ms ease-in;
-    /* transition: left 50ms ease-in-out;
-    transition: top 50ms ease-in-out; */
+    transition-property: width, height, border-radius, background-color;
+    transition-duration: 150ms;
+    transition-timing-function: ease-in;
 }
 
 .runner {

@@ -243,10 +243,10 @@ const chaserGame = {
                 this.position.y = this.direction.y;
 
             }
-            this.updateStyling()
+            this.updateStylingUponCollision()
 
         },
-        updateStyling() {
+        updateStylingUponCollision() {
             if (
                 this.collisions.top &&
                 !this.collisions.left &&
