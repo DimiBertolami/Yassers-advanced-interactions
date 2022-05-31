@@ -71,8 +71,8 @@ function checkForMouseInCarousel() {
  *****************************************************************************************************/
 const collage = {
     imageContainers: Array.from(document.querySelectorAll('.image')),
-    // randomImageURL: `https://picsum.photos/500/500?random=`,
-    randomImageURL: `none`,
+    randomImageURL: `https://picsum.photos/500/500?random=`,
+    // randomImageURL: `none`,
     imageIsBig: false,
     init() {
         this.setRandomImages();
